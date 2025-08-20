@@ -1,0 +1,398 @@
+{
+  "name": "Resume Screening",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ResumeScreening",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "CandidateName",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "ResumeText",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "JobDescription",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -704,
+        -64
+      ],
+      "id": "544ef67c-4286-426e-9ce9-5a31ed4a8aaa",
+      "name": "Resume Screening Submission Form",
+      "webhookId": "a8295a3b-50d1-4ed8-8d5c-105d4e95645f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "57a10219-8c07-45d4-a6d0-e2d6292492a7",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Shortlisted",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        -64
+      ],
+      "id": "4584698a-3f63-4e48-8ca3-ab79685552ae",
+      "name": "Decision Node"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "932d69b4-ce33-44ac-a334-0bd137f1f7fc",
+              "name": "finalScreeningStatus",
+              "value": "Shortlisted by LLM",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        -160
+      ],
+      "id": "2dc1a13a-8613-45e0-a709-1d6daca2f44b",
+      "name": "Shortlisted"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d37b5e9d-77a5-454f-adc6-344559391e2d",
+              "name": "finalScreeningStatus",
+              "value": "Rejected by LLM",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        32
+      ],
+      "id": "590a7e91-f564-405f-a35d-9e8a896941dd",
+      "name": "Rejected"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1bZTXR-_MTHAKUVbCF5nOcEI6SP1i4EB5FO7kKlwpUH0",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ new Date().toISOString() }}",
+            "Candidate Name": "={{ $('Resume Screening Submission Form').item.json.CandidateName }}",
+            "LLM Status": "={{ $('Gemini LLM Response Parser').item.json.status }}",
+            "LLM Reason": "={{ $('Gemini LLM Response Parser').item.json.reason }}",
+            "LLM Confidence Score": "={{ $('Gemini LLM Response Parser').item.json.confidence_score }}",
+            "Final Screening Status": "={{ $('Gemini LLM Response Parser').item.json.status }}",
+            "Job Description Snippet": "={{ $('Resume Screening Submission Form').item.json.JobDescription }}",
+            "Resume Text Snippet": "={{ $('Resume Screening Submission Form').item.json.ResumeText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Candidate Name",
+              "displayName": "Candidate Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LLM Status",
+              "displayName": "LLM Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LLM Reason",
+              "displayName": "LLM Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LLM Confidence Score",
+              "displayName": "LLM Confidence Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Final Screening Status",
+              "displayName": "Final Screening Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Description Snippet",
+              "displayName": "Job Description Snippet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resume Text Snippet",
+              "displayName": "Resume Text Snippet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        592,
+        -64
+      ],
+      "id": "932ea6c9-5c53-42bd-b0bc-43151b42838a",
+      "name": "Google Sheet Result",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "umxAAsJhOisDi7Vz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// This node processes the JSON response from the Gemini API.\n// The Gemini API returns a stringified JSON object within its text part.\n// We need to parse that string into a proper JavaScript object.\n\n// Example: response from Gemini API\nlet raw = $json.output;\n// output = stringified JSON\nraw = raw.replace(/```json|```/g, '').trim();\n// Parse the string into a JS object\nlet parsed;\ntry {\n  parsed = JSON.parse(raw);\n} catch (e) {\n  throw new Error(\"Invalid JSON returned from Gemini API: \" + e.message);\n}\n\n// Now you can extract fields\nreturn {\n  status: parsed.status,\n  reason: parsed.reason,\n  confidence_score: parsed.confidence_score\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -64
+      ],
+      "id": "9e1b179a-cdec-4fe4-a89f-320306d768ac",
+      "name": "Gemini LLM Response Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.CandidateName }}",
+        "options": {
+          "systemMessage": "={   \"contents\": [     {       \"role\": \"user\",       \"parts\": [         {           \"text\": \"You are an AI-powered resume screener. Your task is to evaluate the provided resume against the given job description and determine if the candidate {{ $json.CandidateName }}  is a 'Shortlisted' or 'Rejected'. Provide a brief reason for your decision and a confidence score from 1 to 10 (10 being highly confident). Focus on experience, skills, and relevance to the job description.\\n\\nJob Description:\\n{{ $json.JobDescription }}\\n\\nResume:\\n{{ $json.ResumeText }}\\n\\nProvide your response in JSON format with the following schema: {\\\"status\\\": \\\"string\\\", \\\"reason\\\": \\\"string\\\", \\\"confidence_score\\\": \\\"integer\\\"}.\"         }       ]     }   ],   \"generationConfig\": {     \"responseMimeType\": \"application/json\",     \"responseSchema\": {       \"type\": \"OBJECT\",       \"properties\": {         \"status\": { \"type\": \"STRING\", \"enum\": [\"Shortlisted\", \"Rejected\"] },         \"reason\": { \"type\": \"STRING\" },         \"confidence_score\": { \"type\": \"INTEGER\", \"minimum\": 1, \"maximum\": 10 }       },       \"required\": [\"status\", \"reason\", \"confidence_score\"]     }   } } {{ $json.CandidateName }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        -64
+      ],
+      "id": "6f419313-89a1-45b1-9e0e-a194412df70c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        144
+      ],
+      "id": "fd04a8e6-b1b1-4da5-b839-7392c5d852c5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3py4FYAzGhXIVgJG",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Resume Screening Submission Form": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Node": {
+      "main": [
+        [
+          {
+            "node": "Shortlisted",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shortlisted": {
+      "main": [
+        [
+          {
+            "node": "Google Sheet Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rejected": {
+      "main": [
+        [
+          {
+            "node": "Google Sheet Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini LLM Response Parser": {
+      "main": [
+        [
+          {
+            "node": "Decision Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheet Result": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gemini LLM Response Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "956910f9-e000-41c3-b847-bcdb6ad7e96d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6023d4a311c68938314662f8f0d2d31eebe36753bcc553ef65c2b7a64ba7dfb1"
+  },
+  "id": "jRLyhCVFJDOpNCaQ",
+  "tags": []
+}
