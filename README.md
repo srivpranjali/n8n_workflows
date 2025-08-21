@@ -14,3 +14,7 @@ The workflow is executed using Gemini LLM API and gives the output having -
 3. Confidence Score
 
 The given output is saved in Google sheet for future references.
+
+Health Image Generator to Telegram
+==================================
+This is Agentic AI where the Gemini LLM fetches the random content from the Google Sheet tool and generate a high quality image with embedded text. This image is then posted by Telegram bot to the different telegram chat IDs
